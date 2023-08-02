@@ -1,0 +1,14 @@
+﻿@model ShortenUrl
+@{
+    ViewData["Title"] = "Shorten URLs";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Enter the long URL here: </h1>
+    @using (Html.BeginForm("Complete", "ShortenUrl", FormMethod.Post))
+    {
+        @Html.TextBoxFor(m => m.LongUrl)
+
+        <input type="submit" value="Shorten!" />
+    }
+</div>

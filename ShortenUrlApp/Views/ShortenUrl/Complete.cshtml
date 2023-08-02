@@ -1,0 +1,15 @@
+﻿@model ShortenUrl
+@{
+    ViewData["Title"] = "Shorten URLs";
+
+    string linkUrl = Model.ShortUrl;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Your Shortened URL! </h1>
+    <a href="@linkUrl">
+        <h2>@Model.ShortUrl</h2>
+    </a>
+</div>
+
+@*ToDo: Copy button for link*@

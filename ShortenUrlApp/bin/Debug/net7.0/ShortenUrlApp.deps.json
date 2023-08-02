@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "ShortenUrlApp/1.0.0": {
+        "runtime": {
+          "ShortenUrlApp.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ShortenUrlApp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
