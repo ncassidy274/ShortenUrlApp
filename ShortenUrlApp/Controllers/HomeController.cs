@@ -18,6 +18,16 @@ namespace ShortenUrlApp.Controllers
             return View();
         }
 
+        public IActionResult InvalidInput()
+        {
+            return View();
+        }
+
+        public IActionResult UrlDoesNotExist()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

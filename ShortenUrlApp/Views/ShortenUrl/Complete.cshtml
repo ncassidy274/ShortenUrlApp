@@ -6,10 +6,12 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Your Shortened URL! </h1>
-    <a href="@linkUrl">
-        <h2>@Model.ShortUrl</h2>
-    </a>
+    <div class="row">
+        <div class="mx-auto col-10 col-md-6 col-lh-6 p-2 ">
+            <h1 class="display-4 p-2">Your Shortened URL!</h1>
+            <a class ="p2" href="@linkUrl">
+                <h2>@Model.ShortUrl</h2>
+            </a>
+        </div>
+    </div>
 </div>
-
-@*ToDo: Copy button for link*@

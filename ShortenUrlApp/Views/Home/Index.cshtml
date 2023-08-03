@@ -4,11 +4,19 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Enter the long URL here: </h1>
-    @using (Html.BeginForm("Complete", "ShortenUrl", FormMethod.Post))
-    {
-        @Html.TextBoxFor(m => m.LongUrl)
-
-        <input type="submit" value="Shorten!" />
-    }
+    <div class="row">
+        <div class="mx-auto col-10 col-md-6 col-lh-6 p-2 ">
+            <h1 class="display-4 p-2">Enter the long URL here: </h1>
+            <form asp-action="Complete" asp-controller="ShortenUrl">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input asp-for="LongUrl" class="form-control" />
+                    <span asp-validation-for="LongUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group p-2">
+                    <input type="submit" value="Shorten!" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

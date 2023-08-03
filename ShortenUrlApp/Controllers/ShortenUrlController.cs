@@ -1,10 +1,11 @@
 ﻿using ShortenUrlApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using ShortenUrlApp.Data;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ShortenUrlApp.Controllers
 {
-    public class ShortenUrlController : Controller
+    public class ShortenUrlController : BaseController
     {
         private readonly ShortenUrlAppContext _context;
 
@@ -13,26 +14,33 @@ namespace ShortenUrlApp.Controllers
             _context = context;
         }
 
-        #region Actions        
+        #region Actions      
 
-        //ToDo: Stop being able to jump to here
-        //ToDo: Add validation on input
-        //ToDo: Add styling to Form box on view
+        //ToDo: Change views so not 2 seperate
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Complete([Bind("Id,LongUrl")] ShortenUrl model)
-        {            
+        public async Task<IActionResult> Complete([Bind("LongUrl")] ShortenUrl model)
+        {
             {
+                //Inputted url is invalid - try again 
+                if (!ModelState.IsValid)
+                {
+                    return RedirectToAction("InvalidInput", "Home");
+                }
+
+                //Inputted url is Valid - create shortUrl and save to DB.
                 _context.Add(model);
-
                 HttpContext httpContext = HttpContext;
-
                 GetShortUrl(model, httpContext);
-
-                await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();                
             }
             return View(model);
+        }
+
+        //Incase of url hacking, redirect to home.
+        public IActionResult Complete()
+        {
+            return RedirectToAction("Index");
         }
 
         #endregion
@@ -41,14 +49,7 @@ namespace ShortenUrlApp.Controllers
 
         protected void GetShortUrl(ShortenUrl model, HttpContext httpContext)
         {
-            if (LongUrlExists(model.LongUrl))
-            {
-                //return stored short url
-            }
-            else
-            {
-                model.ShortUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/s/{GenerateUniqueString()}";
-            }            
+            model.ShortUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/s/{GenerateUniqueString()}";
         }
 
         private string GenerateUniqueString()
@@ -65,22 +66,20 @@ namespace ShortenUrlApp.Controllers
         {
             Random random = new Random();         
 
-            //ToDo: Check caps/lowercase
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
             var generatedString = new string(Enumerable.Range(1, 5).Select(m => chars[random.Next(chars.Length)]).ToArray());
 
             return generatedString;
         }
 
-        private bool LongUrlExists(string value)
-        {
-            return false;
-        }
-
         private bool ShortUrlExists(string value)
         {
-            return false;
+            bool? checkExists = _context.ShortenUrl?.Any(e => e.ShortUrl == value);
+
+            bool exists = checkExists ?? false;
+
+            return exists;
         }
 
         #endregion

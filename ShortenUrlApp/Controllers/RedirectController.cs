@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ShortenUrlApp.Data;
 
 namespace ShortenUrlApp.Controllers
 {
-    public class RedirectController : Controller
+    public class RedirectController : BaseController
     {
         private readonly ShortenUrlAppContext _context;
 
@@ -12,12 +13,23 @@ namespace ShortenUrlApp.Controllers
             _context = context;
         }
 
+        [Route("/s")]
+        public IActionResult RedirectToIndex()
+        {            
+            return RedirectToAction("Index");
+        }
+
         [Route("/s/{*catchAll}")]
-        public IActionResult RedirectToLongUrl()
+        public IActionResult RedirectToLongUrl(string catchAll)
         {
             string shortUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}{Request.QueryString}";
             var longUrl = _context.ShortenUrl?.Where(e => e.ShortUrl == shortUrl).Select(e => e.LongUrl).FirstOrDefault();
-            //ToDo: Add check for null
+
+            if (longUrl.IsNullOrEmpty())
+            {
+                return RedirectToAction("UrlDoesNotExist", "Home");
+            }
+
             return Redirect(longUrl);
         }
     }
