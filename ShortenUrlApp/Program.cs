@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ShortenUrlApp.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<ShortenUrlAppContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ShortenUrlAppContext") ?? throw new InvalidOperationException("Connection string 'ShortenUrlAppContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

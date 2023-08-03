@@ -1,53 +1,86 @@
 ﻿using ShortenUrlApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using ShortenUrlApp.Data;
 
 namespace ShortenUrlApp.Controllers
 {
     public class ShortenUrlController : Controller
     {
-        #region Actions
+        private readonly ShortenUrlAppContext _context;
+
+        public ShortenUrlController(ShortenUrlAppContext context)
+        {
+            _context = context;
+        }
+
+        #region Actions        
 
         //ToDo: Stop being able to jump to here
         //ToDo: Add validation on input
         //ToDo: Add styling to Form box on view
         [HttpPost]
-        public ActionResult Complete(ShortenUrl model)
-        {
-            //ToDo: Check if longurl already exists in db
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Complete([Bind("Id,LongUrl")] ShortenUrl model)
+        {            
+            {
+                _context.Add(model);
 
-            HttpContext context = HttpContext;
-            model.ShortUrl = BuildShortUrl(context);
-            //save model to db
+                HttpContext httpContext = HttpContext;
 
-            return View("Complete", model);
+                GetShortUrl(model, httpContext);
+
+                await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
         #endregion
 
         #region Helpers
 
-        protected string BuildShortUrl(HttpContext context)
+        protected void GetShortUrl(ShortenUrl model, HttpContext httpContext)
         {
-            var generatedString = GenerateUniqueString();                     
-
-            var responseUri = $"{context.Request.Scheme}://{context.Request.Host}/{generatedString}";
-
-            return responseUri;
+            if (LongUrlExists(model.LongUrl))
+            {
+                //return stored short url
+            }
+            else
+            {
+                model.ShortUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/s/{GenerateUniqueString()}";
+            }            
         }
 
         private string GenerateUniqueString()
         {
-            Random random = new Random();
+            var randomString = GenerateRandomString();
+            while (ShortUrlExists(randomString))
+            {
+                randomString = GenerateRandomString();
+            }
+            return randomString;
+        }
+
+        private string GenerateRandomString()
+        {
+            Random random = new Random();         
 
             //ToDo: Check caps/lowercase
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
             var generatedString = new string(Enumerable.Range(1, 5).Select(m => chars[random.Next(chars.Length)]).ToArray());
 
-            //check shortUrl does not already exist
-
             return generatedString;
+        }
+
+        private bool LongUrlExists(string value)
+        {
+            return false;
+        }
+
+        private bool ShortUrlExists(string value)
+        {
+            return false;
         }
 
         #endregion
