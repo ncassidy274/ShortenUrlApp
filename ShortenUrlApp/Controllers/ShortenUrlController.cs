@@ -16,7 +16,6 @@ namespace ShortenUrlApp.Controllers
 
         #region Actions      
 
-        //ToDo: Change views so not 2 seperate
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Complete([Bind("LongUrl")] ShortenUrl model)
@@ -25,7 +24,7 @@ namespace ShortenUrlApp.Controllers
                 //Inputted url is invalid - try again 
                 if (!ModelState.IsValid)
                 {
-                    return RedirectToAction("InvalidInput", "Home");
+                    return RedirectToAction("Error", "Home", model);
                 }
 
                 //Inputted url is Valid - create shortUrl and save to DB.

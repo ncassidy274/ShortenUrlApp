@@ -10,6 +10,7 @@ public class ShortenUrl
 
     public int Id { get; set; }
 
+    [Required(ErrorMessage = "No URL Found.")]
     [ValidLink]
     public string LongUrl { get; set; }
 
@@ -17,9 +18,4 @@ public class ShortenUrl
 
     #endregion
 
-    #region Methods
-
-    
-
-    #endregion
 }

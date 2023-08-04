@@ -15,7 +15,7 @@ namespace ShortenUrlApp.Attributes
             if (!Uri.TryCreate(link, UriKind.Absolute, out Uri result) ||
                 (result.Scheme != Uri.UriSchemeHttp && result.Scheme != Uri.UriSchemeHttps))
             {
-                return new ValidationResult("Invalid link format.");
+                return new ValidationResult("URL Format Invalid.");
             }
 
             return ValidationResult.Success;

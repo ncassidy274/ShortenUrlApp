@@ -27,7 +27,7 @@ namespace ShortenUrlApp.Controllers
 
             if (longUrl.IsNullOrEmpty())
             {
-                return RedirectToAction("UrlDoesNotExist", "Home");
+                return RedirectToAction("Index");
             }
 
             return Redirect(longUrl);
